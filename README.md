@@ -1,4 +1,4 @@
-:
+https://img.shields.io/badge/QUICK%20BITE-8A2BE2
 
 🍔 QuickBite — Fast, Fun, Delicious
 Your modern food ordering companion that makes dining effortless. QuickBite helps restaurants, cafés, and kiosks deliver a smooth, cloud‑powered ordering experience without any installations.
