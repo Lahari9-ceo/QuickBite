@@ -1,0 +1,54 @@
+name: Backend CI/CD & Database Verification
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test-and-verify:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: quickbite_user
+          POSTGRES_PASSWORD: quickbite_password
+          POSTGRES_DB: quickbite_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+
+    - name: Install dependencies
+      run: |
+        cd backend
+        npm ci
+
+    - name: Seed Database Schema & Data
+      run: |
+        PGPASSWORD=quickbite_password psql -h localhost -U quickbite_user -d quickbite_db -f database/schema.sql
+        PGPASSWORD=quickbite_password psql -h localhost -U quickbite_user -d quickbite_db -f database/seed.sql
+
+    - name: Verify Backend Server Initialization
+      env:
+        DATABASE_URL: postgresql://quickbite_user:quickbite_password@localhost:5432/quickbite_db
+        PORT: 5000
+      run: |
+        cd backend
+        node server.js &
+        sleep 3
+        curl http://localhost:5000/

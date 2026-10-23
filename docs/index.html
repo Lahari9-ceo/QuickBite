@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickBite | Smart Order Kiosk</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="kiosk-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <span class="logo-icon">⚡</span>
+        <h1>QuickBite</h1>
+      </div>
+      <div class="order-type-toggle">
+        <button class="toggle-btn active" id="btn-dinein" onclick="setOrderType('dine_in')">🍽️ Dine In</button>
+        <button class="toggle-btn" id="btn-takeout" onclick="setOrderType('takeout')">🛍️ Takeout</button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-layout">
+      <!-- Categories Sidebar -->
+      <nav class="categories-bar" id="categories-container">
+        <!-- Categories injected via JS -->
+      </nav>
+
+      <!-- Menu Grid -->
+      <section class="menu-section">
+        <h2 id="category-title">All Items</h2>
+        <div class="menu-grid" id="menu-grid">
+          <p class="loading-text">Loading fresh menu...</p>
+        </div>
+      </section>
+
+      <!-- Cart Side Panel -->
+      <aside class="cart-panel">
+        <h3>Your Order</h3>
+        <div class="cart-items" id="cart-items">
+          <div class="empty-cart">
+            <span>🛒</span>
+            <p>Your tray is empty.<br>Tap an item to add it!</p>
+          </div>
+        </div>
+        <div class="cart-footer">
+          <div class="cart-summary">
+            <div class="row"><span>Subtotal</span><span id="subtotal-val">$0.00</span></div>
+            <div class="row"><span>Tax (8%)</span><span id="tax-val">$0.00</span></div>
+            <div class="row total"><span>Total</span><span id="total-val">$0.00</span></div>
+          </div>
+          <button class="checkout-btn" id="checkout-btn" onclick="openCheckout()" disabled>
+            Proceed to Checkout
+          </button>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Item Customization Modal -->
+  <div class="modal-overlay" id="custom-modal">
+    <div class="modal-card">
+      <span class="close-btn" onclick="closeCustomModal()">&times;</span>
+      <img id="modal-img" src="" alt="Food item">
+      <h3 id="modal-title">Item Name</h3>
+      <p id="modal-desc">Description</p>
+      
+      <h4>Customizations</h4>
+      <div class="options-list" id="modal-options"></div>
+
+      <div class="modal-actions">
+        <div class="qty-control">
+          <button onclick="changeModalQty(-1)">-</button>
+          <span id="modal-qty">1</span>
+          <button onclick="changeModalQty(1)">+</button>
+        </div>
+        <button class="add-to-cart-btn" onclick="confirmAddToCart()">
+          Add to Order • <span id="modal-total-price">$0.00</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout / Receipt Modal -->
+  <div class="modal-overlay" id="checkout-modal">
+    <div class="modal-card text-center">
+      <div id="payment-stage">
+        <h2>Instant Checkout</h2>
+        <p>Select your payment method:</p>
+        <div class="payment-options">
+          <button class="pay-btn" onclick="processPayment('Credit Card')">💳 Credit Card</button>
+          <button class="pay-btn" onclick="processPayment('Apple/Google Pay')">📱 Mobile Pay</button>
+        </div>
+        <button class="cancel-btn" onclick="closeCheckoutModal()">Cancel</button>
+      </div>
+
+      <div id="receipt-stage" style="display: none;">
+        <div class="success-icon">🎉</div>
+        <h2>Order Confirmed!</h2>
+        <p>Order Number: <strong id="receipt-number">#QB-000000</strong></p>
+        <p>Estimated prep time: <strong>8-12 mins</strong></p>
+        <p class="sub-text">Please keep your receipt number ready.</p>
+        <button class="checkout-btn" onclick="resetKiosk()">Done / New Order</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
